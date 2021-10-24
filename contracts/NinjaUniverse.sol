@@ -1711,32 +1711,33 @@ contract NinjaUniverse is
 
     uint256 public _currentTokenId = 0;
 
-    uint256 MAX_SUPPLY =  5555;
+    uint256 MAX_SUPPLY =  555;
     string public baseTokenURI;
    
-    uint256 public presale_Startdate = 1633069810; // 04/10/2021 18:00:00 UTC+7 - 1633345200
-    uint256 public presale_Enddate = 1633070700; // 04/10/2021 18:30:00 UTC+7 - 1633347000
+    uint256 public presale_Startdate = 1633069810; 
+    uint256 public presale_Enddate = 1640352932;
     bool public end_presale = false;
     
     uint256 public NFT_price = 0.02 ether; 
     uint256 public NFT_price_for_3 = 0.05 ether; 
 
-    uint256 public startTime = 1633070701; // 04/10/2021 18:30:01 UTC+7 - 1633347001
-    string _name = "Ninja Universe";
-    string _symbol = "NU";
-    string notRevealedUri = "https://gateway.pinata.cloud/ipfs/QmPV53xUFp7kaQn5pC2WU31PFvUFd1ZQZHkLfpi5RhcbMo/hidden.json";
+    uint256 public startTime = 1633070701;
+    string notRevealedURI;
     
     
     bool public isBuy_1_Get_free_enabled = false;
-    
     address[] public whitelistedAddresses;
-  
-    uint256 public reveal_time = 1633062318; // 05/10/2021 17:00 UTC+7 - 1633341600
+    uint256 public reveal_time = 1640352932;
   
 
-    constructor(string memory _initBaseURI) ERC721(_name, _symbol) {
-        // baseTokenURI = _uri;
-        setBaseUri(_initBaseURI);
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        string memory _initBaseURI,
+        string memory _initNotRevealedURI
+    ) ERC721(_name, _symbol) {
+        notRevealedURI = _initNotRevealedURI;
+        baseTokenURI = _initBaseURI;
         _initializeEIP712(_name);
     }
     
@@ -1926,7 +1927,7 @@ contract NinjaUniverse is
     {
         
         if(block.timestamp < reveal_time){
-            return notRevealedUri;
+            return notRevealedURI;
         }
         return
             string(abi.encodePacked(baseTokenURI, Strings.toString(_tokenId), ".json"));
