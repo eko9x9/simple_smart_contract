@@ -4,7 +4,6 @@
 
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-//Developed by blockchainguy.net
 library SafeMath {
     /**
      * @dev Returns the addition of two unsigned integers, with an overflow flag.
@@ -761,6 +760,7 @@ abstract contract ContextMixin {
         return sender;
     }
 }
+
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
@@ -770,6 +770,7 @@ abstract contract Context {
         return msg.data;
     }
 }
+
 abstract contract Ownable is Context {
     address private _owner;
 
@@ -1700,6 +1701,20 @@ contract NativeMetaTransaction is EIP712Base {
     }
 }
 
+abstract contract ERC721Burnable is Context, ERC721 {
+    /**
+     * @dev Burns `tokenId`. See {ERC721-_burn}.
+     *
+     * Requirements:
+     *
+     * - The caller must own `tokenId` or be an approved operator.
+     */
+    function burn(uint256 tokenId) public virtual {
+        //solhint-disable-next-line max-line-length
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+        _burn(tokenId);
+    }
+}
 
 contract NinjaUniverse is
     ContextMixin,
@@ -1713,16 +1728,16 @@ contract NinjaUniverse is
 
     uint256 MAX_SUPPLY =  555;
     string public baseTokenURI;
+    string notRevealedURI;
    
     uint256 public presale_Startdate = 1633069810; 
-    uint256 public presale_Enddate = 1640352932;
+    uint256 public presale_Enddate = 1635570329;
     bool public end_presale = false;
     
     uint256 public NFT_price = 0.02 ether; 
     uint256 public NFT_price_for_3 = 0.05 ether; 
 
     uint256 public startTime = 1633070701;
-    string notRevealedURI;
     
     
     bool public isBuy_1_Get_free_enabled = false;
@@ -1739,6 +1754,11 @@ contract NinjaUniverse is
         notRevealedURI = _initNotRevealedURI;
         baseTokenURI = _initBaseURI;
         _initializeEIP712(_name);
+    }
+
+    function burn(uint256 tokenId) public virtual {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+        _burn(tokenId);
     }
     
     function set_Buy_1_Get_1_free(bool result) external onlyOwner{
