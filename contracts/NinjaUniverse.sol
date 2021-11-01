@@ -1727,7 +1727,7 @@ contract NinjaUniverse is
     
     bool public isBuy_1_Get_free_enabled = false;
     address[] public whitelistedAddresses;
-    uint256 public reveal_time = 1640352932;
+    uint256 public reveal_time = 1635647518;
   
 
     constructor(
