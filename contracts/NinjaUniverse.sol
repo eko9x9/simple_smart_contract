@@ -1701,21 +1701,6 @@ contract NativeMetaTransaction is EIP712Base {
     }
 }
 
-abstract contract ERC721Burnable is Context, ERC721 {
-    /**
-     * @dev Burns `tokenId`. See {ERC721-_burn}.
-     *
-     * Requirements:
-     *
-     * - The caller must own `tokenId` or be an approved operator.
-     */
-    function burn(uint256 tokenId) public virtual {
-        //solhint-disable-next-line max-line-length
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
-        _burn(tokenId);
-    }
-}
-
 contract NinjaUniverse is
     ContextMixin,
     ERC721Enumerable,
@@ -1728,7 +1713,7 @@ contract NinjaUniverse is
 
     uint256 MAX_SUPPLY =  555;
     string public baseTokenURI;
-    string notRevealedURI;
+    string public notRevealedURI;
    
     uint256 public presale_Startdate = 1633069810; 
     uint256 public presale_Enddate = 1635570329;
@@ -1756,13 +1741,18 @@ contract NinjaUniverse is
         _initializeEIP712(_name);
     }
 
-    function burn(uint256 tokenId) public virtual {
+    function burn(uint256 tokenId) external onlyOwner {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
         _burn(tokenId);
     }
     
     function set_Buy_1_Get_1_free(bool result) external onlyOwner{
         isBuy_1_Get_free_enabled = result;
+    }
+
+    function setNftPrice(uint256 nftPrice, uint256 nftPriceFor_3) external onlyOwner{
+        NFT_price = nftPrice;
+        NFT_price_for_3 = nftPriceFor_3;
     }
     
     function set_reveal_time(uint256 temp_time) external onlyOwner{
@@ -1779,8 +1769,6 @@ contract NinjaUniverse is
     function end_presale_manually() external onlyOwner{
         end_presale = true;
     }
-
-
     
     //Presale Functions
     
@@ -1936,6 +1924,10 @@ contract NinjaUniverse is
      */
     function setBaseUri(string memory _uri) public onlyOwner {
         baseTokenURI = _uri;
+    }
+
+    function setNotRevealedUri(string memory _notRevealedUri) public onlyOwner {
+        notRevealedURI = _notRevealedUri;
     }
     
 
